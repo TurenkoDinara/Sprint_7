@@ -58,11 +58,11 @@ class TestLoginCourier:
         assert Messages.COURIER_ID_REQUIRED in response.text, (
             f"Ожидали сообщение '{Messages.COURIER_ID_REQUIRED}', получили {response.text}"
         )
+
     @allure.title("Авторизация с неверным паролем")
     @allure.description("Проверяем, что при неправильном пароле возвращается 404 и сообщение об ошибке.")
-    def test_login_with_wrong_password(self):
-        courier_data = generate_courier_data()
-        CourierHelpers.create_courier_with_payload(courier_data)
+    def test_login_with_wrong_password(self, create_and_delete_courier):
+        courier_data = create_and_delete_courier
 
         payload = {
             "login": courier_data["login"],
@@ -71,14 +71,7 @@ class TestLoginCourier:
         response = requests.post(Urls.LOGIN_COURIER, json=payload)
 
         assert response.status_code == 404, f"Ожидали 404, получили {response.status_code}"
-        assert Messages.ACCOUNT_NOT_FOUND in response.text, (
-            f"Ожидали сообщение '{Messages.ACCOUNT_NOT_FOUND}', получили {response.text}"
-        )
-
-        # Удаляем курьера после теста
-        courier_id = CourierHelpers.get_courier_id(courier_data["login"], courier_data["password"])
-        if courier_id:
-            CourierHelpers.delete_courier(courier_id)
+        assert Messages.ACCOUNT_NOT_FOUND in response.text
 
     @allure.title("Авторизация под несуществующим курьером")
     @allure.description("Проверяем, что при логине несуществующего курьера возвращается 404 и сообщение об ошибке.")

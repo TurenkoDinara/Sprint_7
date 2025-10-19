@@ -11,7 +11,11 @@ class Messages:
     # Успешные сообщения
     OK_TRUE = '{"ok":true}'
     TRACK_FIELD = "track"
-# data.py
+
+class CourierData:
+    WITHOUT_LOGIN = {"password": "1234", "firstName": "Ivan"}
+    WITHOUT_PASSWORD = {"login": "no_pass_login", "firstName": "Petr"}
+    EXPECTED_OK = {"ok": True}
 
 class OrderData:
     BASE_ORDER = {
